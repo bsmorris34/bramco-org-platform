@@ -37,10 +37,6 @@ jobs:
       - name: Create terraform.tfvars and Plan
         id: plan
         working-directory: ./cloud_org_forge/aws/environments/organization
-        env:
-          TF_VAR_aws_region: "us-east-1"
-          TF_VAR_notification_email: "bsmorris1+aws@gmail.com"
-          TF_VAR_github_repository: "bsmorris34/bramco-org-platform"
         run: |
           cat > terraform.tfvars << EOF
           aws_region = "us-east-1"
@@ -61,7 +57,6 @@ jobs:
           github_repository = "bsmorris34/bramco-org-platform"
           EOF
           terraform plan -no-color
-        run: terraform plan -no-color
         
       - name: Comment PR
         uses: actions/github-script@v7
