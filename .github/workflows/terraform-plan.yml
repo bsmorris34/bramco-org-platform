@@ -3,13 +3,10 @@ name: Terraform Plan
 on:
   pull_request:
     branches: [main]
-    paths:
-      - 'cloud_org_forge/aws/**'
 
 permissions:
   id-token: write
   contents: read
-  pull-requests: write
 
 jobs:
   terraform-plan:
@@ -27,33 +24,11 @@ jobs:
           
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "~1.0"
-          
+        
       - name: Terraform Init
         working-directory: ./cloud_org_forge/aws/environments/organization
         run: terraform init -backend-config=backend.hcl
         
-      - name: Create terraform.tfvars and Plan
-        id: plan
+      - name: Terraform Plan
         working-directory: ./cloud_org_forge/aws/environments/organization
-        run: |
-          cat > terraform.tfvars << EOF
-          aws_region = "us-east-1"
-          account_ids = {
-            management = "396913723725"
-            dev        = "688567306703"
-            staging    = "400205986141"
-            prod       = "825765407025"
-          }
-          notification_email = "bsmorris1+aws@gmail.com"
-          budget_amounts = {
-            management = 50
-            dev        = 25
-            staging    = 30
-            prod       = 100
-          }
-          budget_thresholds = [50, 80, 100]
-          github_repository = "bsmorris34/bramco-org-platform"
-          EOF
-          terraform plan -no-color
+        run: terraform plan -var-file=terraform.tfvars -no-color
