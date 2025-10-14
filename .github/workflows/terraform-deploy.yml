@@ -13,7 +13,6 @@ permissions:
 jobs:
   terraform-deploy:
     runs-on: ubuntu-latest
-    environment: production
     
     steps:
       - name: Checkout code
@@ -27,8 +26,6 @@ jobs:
           
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "~1.0"
           
       - name: Terraform Init
         working-directory: ./cloud_org_forge/aws/environments/organization
