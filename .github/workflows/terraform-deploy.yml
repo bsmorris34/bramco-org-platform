@@ -36,8 +36,22 @@ jobs:
         
       - name: Terraform Plan
         working-directory: ./cloud_org_forge/aws/environments/organization
+        env:
+          TF_VAR_aws_region: "us-east-1"
+          TF_VAR_account_ids: '{"management":"396913723725","dev":"688567306703","staging":"400205986141","prod":"825765407025"}'
+          TF_VAR_notification_email: "bsmorris1+aws@gmail.com"
+          TF_VAR_budget_amounts: '{"management":50,"dev":25,"staging":30,"prod":100}'
+          TF_VAR_budget_thresholds: '[50,80,100]'
+          TF_VAR_github_repository: "bsmorris34/bramco-org-platform"
         run: terraform plan -no-color
         
       - name: Terraform Apply
         working-directory: ./cloud_org_forge/aws/environments/organization
+        env:
+          TF_VAR_aws_region: "us-east-1"
+          TF_VAR_account_ids: '{"management":"396913723725","dev":"688567306703","staging":"400205986141","prod":"825765407025"}'
+          TF_VAR_notification_email: "bsmorris1+aws@gmail.com"
+          TF_VAR_budget_amounts: '{"management":50,"dev":25,"staging":30,"prod":100}'
+          TF_VAR_budget_thresholds: '[50,80,100]'
+          TF_VAR_github_repository: "bsmorris34/bramco-org-platform"
         run: terraform apply -auto-approve

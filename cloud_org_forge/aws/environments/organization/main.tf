@@ -486,7 +486,7 @@ module "github_oidc" {
   source = "../../modules/github_oidc"
   
   github_repository = var.github_repository
-  github_branches   = ["main"]
+  github_branches   = ["main", "feature/*"]
   role_name        = "GitHubActionsDeploymentRole"
   
   # Permissions for Terraform deployments
@@ -523,4 +523,4 @@ module "github_oidc" {
   
   common_tags = module.common_tags.common_tags
 }
-# Test comment for GitHub Actions
+# Test comment for GitHub Actions - workflow fix
