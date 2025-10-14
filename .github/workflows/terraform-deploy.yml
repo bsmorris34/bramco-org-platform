@@ -34,7 +34,7 @@ jobs:
         working-directory: ./cloud_org_forge/aws/environments/organization
         run: terraform init -backend-config=backend.hcl
         
-      - name: Create terraform.tfvars and Plan
+      - name: Create tfvars and Plan
         working-directory: ./cloud_org_forge/aws/environments/organization
         run: |
           cat > terraform.tfvars << EOF
