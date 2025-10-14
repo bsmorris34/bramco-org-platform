@@ -1,0 +1,14 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DenyAccountCreation",
+      "Effect": "Deny",
+      "Action": [
+        "organizations:CreateAccount",
+        "organizations:CreateGovCloudAccount"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

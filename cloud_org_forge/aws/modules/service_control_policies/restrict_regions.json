@@ -1,0 +1,24 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "RestrictToUSEast1",
+      "Effect": "Deny",
+      "Action": "*",
+      "Resource": "*",
+      "Condition": {
+        "StringNotEquals": {
+          "aws:RequestedRegion": "us-east-1"
+        },
+        "ForAllValues:StringNotLike": {
+          "aws:PrincipalServiceName": [
+            "cloudfront.amazonaws.com",
+            "iam.amazonaws.com",
+            "route53.amazonaws.com",
+            "support.amazonaws.com"
+          ]
+        }
+      }
+    }
+  ]
+}
