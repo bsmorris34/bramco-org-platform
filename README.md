@@ -50,7 +50,7 @@ Monthly budgets with email alerts at 50%, 80%, 100%:
 
 #### Pull Request Workflow (`terraform-plan.yml`)
 - **Trigger**: PRs to main branch
-- **Actions**: 
+- **Actions**:
   - Authenticate via OIDC
   - Run `terraform plan`
   - Show plan in PR comments

@@ -5,14 +5,14 @@ locals {
       staging = "stg"
       prod    = "prd"
     }
-    
+
     resource_suffixes = {
       storage_account = "sa"
       resource_group  = "rg"
-      key_vault      = "kv"
-      app_service    = "app"
+      key_vault       = "kv"
+      app_service     = "app"
     }
-    
+
     separator = "-"
   }
 }

@@ -11,8 +11,8 @@ variable "policies" {
 variable "policy_attachments" {
   description = "Map of policy attachments to organizational units"
   type = map(object({
-    policy_key  = string  # Key from policies map
-    target_id   = string  # OU ID to attach policy to
+    policy_key = string # Key from policies map
+    target_id  = string # OU ID to attach policy to
   }))
   default = {}
 }

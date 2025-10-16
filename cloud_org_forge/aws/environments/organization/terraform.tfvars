@@ -3,10 +3,10 @@ aws_region = "us-east-1"
 
 # AWS Account IDs for Bramco Organization
 account_ids = {
-  management = "396913723725"  # bramco management account
-  dev        = "688567306703"  # bramco-dev account
-  staging    = "400205986141"  # Bramco-Staging account
-  prod       = "825765407025"  # bramco-prod account
+  management = "396913723725" # bramco management account
+  dev        = "688567306703" # bramco-dev account
+  staging    = "400205986141" # Bramco-Staging account
+  prod       = "825765407025" # bramco-prod account
 }
 
 # Email for notifications

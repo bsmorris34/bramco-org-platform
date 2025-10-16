@@ -4,10 +4,10 @@ data "aws_organizations_organization" "current" {}
 # Generate standardized tags for all resources
 module "common_tags" {
   source = "../../../shared/modules/common-tags"
-  
-  environment   = "organization"
-  project_name  = "bramco1"
-  owner         = "platform-team"
+
+  environment  = "organization"
+  project_name = "bramco1"
+  owner        = "platform-team"
 }
 
 # Create organizational unit structure for account management
@@ -23,7 +23,7 @@ module "organizational_units" {
         Purpose = "Security and compliance workloads"
       }
     }
-    
+
     workloads = {
       name      = "Workloads"
       parent_id = data.aws_organizations_organization.current.roots[0].id
@@ -31,7 +31,7 @@ module "organizational_units" {
         Purpose = "Application and service workloads"
       }
     }
-    
+
     sandbox = {
       name      = "Sandbox"
       parent_id = data.aws_organizations_organization.current.roots[0].id
@@ -45,23 +45,23 @@ module "organizational_units" {
   nested_organizational_units = {
     dev_workloads = {
       name          = "Development"
-      parent_ou_key = "workloads"  # References workloads OU above
+      parent_ou_key = "workloads" # References workloads OU above
       tags = {
         Environment = "development"
       }
     }
-    
+
     staging_workloads = {
       name          = "Staging"
-      parent_ou_key = "workloads"  # References workloads OU above
+      parent_ou_key = "workloads" # References workloads OU above
       tags = {
         Environment = "staging"
       }
     }
-    
+
     prod_workloads = {
       name          = "Production"
-      parent_ou_key = "workloads"  # References workloads OU above
+      parent_ou_key = "workloads" # References workloads OU above
       tags = {
         Environment = "production"
       }
@@ -104,13 +104,13 @@ module "service_control_policies" {
       description     = "Prevent root user access in workload accounts"
       policy_document = file("${path.module}/../../modules/service_control_policies/deny_root_access.json")
     }
-    
+
     deny_account_creation = {
       name            = "DenyAccountCreation"
       description     = "Prevent accidental account creation"
       policy_document = file("${path.module}/../../modules/service_control_policies/deny_account_creation.json")
     }
-    
+
     require_mfa = {
       name            = "RequireMFA"
       description     = "Require MFA for sensitive actions"
@@ -131,13 +131,13 @@ module "service_control_policies" {
       policy_key = "deny_account_creation"
       target_id  = data.aws_organizations_organization.current.roots[0].id
     }
-    
+
     # Prevent root user access in all workload accounts
     workloads_deny_root = {
       policy_key = "deny_root_access"
       target_id  = module.organizational_units.ou_ids["workloads"]
     }
-    
+
     # Require MFA for sensitive operations in workload accounts
     workloads_require_mfa = {
       policy_key = "require_mfa"
@@ -178,12 +178,12 @@ module "sso_permission_sets" {
       name        = "BrandonDeveloper"
       description = "Developer - Building and experimenting in dev environment only"
       managed_policies = [
-        "arn:aws:iam::aws:policy/PowerUserAccess"  # Full access except IAM
+        "arn:aws:iam::aws:policy/PowerUserAccess" # Full access except IAM
       ]
-      session_duration = "PT8H"  # 8 hour sessions
-      inline_policies = {}
+      session_duration = "PT8H" # 8 hour sessions
+      inline_policies  = {}
     }
-    
+
     # DEVOPS STAGING ROLE - Staging deployment and testing
     brandon_devops_staging = {
       name        = "BrandonDevOpsStaging"
@@ -194,10 +194,10 @@ module "sso_permission_sets" {
         "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
         "arn:aws:iam::aws:policy/CloudWatchFullAccess"
       ]
-      session_duration = "PT8H"  # 8 hour sessions
-      inline_policies = {}
+      session_duration = "PT8H" # 8 hour sessions
+      inline_policies  = {}
     }
-    
+
     # DEVOPS PRODUCTION ROLE - Restricted production deployment
     brandon_devops_production = {
       name        = "BrandonDevOpsProduction"
@@ -205,7 +205,7 @@ module "sso_permission_sets" {
       managed_policies = [
         "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
       ]
-      session_duration = "PT4H"  # Shorter 4 hour sessions for production
+      session_duration = "PT4H" # Shorter 4 hour sessions for production
       inline_policies = {
         # Custom policy for limited production deployment actions
         production_deploy = jsonencode({
@@ -244,19 +244,19 @@ module "sso_permission_sets" {
         })
       }
     }
-    
+
     # SECURITY AUDITOR ROLE - Cross-account security monitoring
     brandon_security_auditor = {
       name        = "BrandonSecurityAuditor"
       description = "Security Auditor - Cross-account compliance and security monitoring"
       managed_policies = [
-        "arn:aws:iam::aws:policy/SecurityAudit",    # Security-focused read access
-        "arn:aws:iam::aws:policy/ReadOnlyAccess"    # General read-only access
+        "arn:aws:iam::aws:policy/SecurityAudit", # Security-focused read access
+        "arn:aws:iam::aws:policy/ReadOnlyAccess" # General read-only access
       ]
-      session_duration = "PT8H"  # 8 hour sessions
-      inline_policies = {}
+      session_duration = "PT8H" # 8 hour sessions
+      inline_policies  = {}
     }
-    
+
     # PLATFORM ENGINEER ROLE - Management account infrastructure only
     brandon_platform_engineer = {
       name        = "BrandonPlatformEngineer"
@@ -267,7 +267,7 @@ module "sso_permission_sets" {
         "arn:aws:iam::aws:policy/job-function/Billing",
         "arn:aws:iam::aws:policy/AWSBudgetsActionsWithAWSResourceControlAccess"
       ]
-      session_duration = "PT4H"  # Shorter sessions for high-privilege role
+      session_duration = "PT4H" # Shorter sessions for high-privilege role
       inline_policies = {
         # Custom policy for platform management with region restriction
         platform_management = jsonencode({
@@ -285,7 +285,7 @@ module "sso_permission_sets" {
               Resource = "*"
               Condition = {
                 StringEquals = {
-                  "aws:RequestedRegion" = "us-east-1"  # Restrict to us-east-1 only
+                  "aws:RequestedRegion" = "us-east-1" # Restrict to us-east-1 only
                 }
               }
             }
@@ -293,7 +293,7 @@ module "sso_permission_sets" {
         })
       }
     }
-    
+
     # READ-ONLY MONITOR - All environments monitoring and troubleshooting
     brandon_monitor = {
       name        = "BrandonMonitor"
@@ -302,10 +302,10 @@ module "sso_permission_sets" {
         "arn:aws:iam::aws:policy/ReadOnlyAccess",
         "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
       ]
-      session_duration = "PT8H"  # 8 hour sessions
-      inline_policies = {}
+      session_duration = "PT8H" # 8 hour sessions
+      inline_policies  = {}
     }
-    
+
     # EMERGENCY ADMIN - Break-glass admin access for all accounts
     brandon_emergency_admin = {
       name        = "BrandonEmergencyAdmin"
@@ -313,8 +313,8 @@ module "sso_permission_sets" {
       managed_policies = [
         "arn:aws:iam::aws:policy/AdministratorAccess"
       ]
-      session_duration = "PT2H"  # Short 2 hour sessions for security
-      inline_policies = {}
+      session_duration = "PT2H" # Short 2 hour sessions for security
+      inline_policies  = {}
     }
   }
 
@@ -328,7 +328,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.dev
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     # DEVOPS STAGING: Staging Account Only - Testing and deployment
     brandon_as_devops_staging = {
       permission_set_key = "brandon_devops_staging"
@@ -337,7 +337,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.staging
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     # DEVOPS PRODUCTION: Production Account - Limited deployment capabilities
     brandon_as_devops_production = {
       permission_set_key = "brandon_devops_production"
@@ -346,7 +346,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.prod
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     # SECURITY AUDITOR: Cross-account security monitoring and compliance
     brandon_as_security_management = {
       permission_set_key = "brandon_security_auditor"
@@ -355,7 +355,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.management
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     brandon_as_security_dev = {
       permission_set_key = "brandon_security_auditor"
       principal_id       = data.aws_identitystore_user.brandon.user_id
@@ -363,7 +363,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.dev
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     brandon_as_security_staging = {
       permission_set_key = "brandon_security_auditor"
       principal_id       = data.aws_identitystore_user.brandon.user_id
@@ -371,7 +371,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.staging
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     brandon_as_security_prod = {
       permission_set_key = "brandon_security_auditor"
       principal_id       = data.aws_identitystore_user.brandon.user_id
@@ -379,7 +379,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.prod
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     # PLATFORM ENGINEER: Management Account Only - Organization and infrastructure management
     brandon_as_platform_engineer = {
       permission_set_key = "brandon_platform_engineer"
@@ -388,7 +388,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.management
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     # MONITOR: Read-only access across all accounts for troubleshooting
     brandon_as_monitor_dev = {
       permission_set_key = "brandon_monitor"
@@ -397,7 +397,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.dev
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     brandon_as_monitor_staging = {
       permission_set_key = "brandon_monitor"
       principal_id       = data.aws_identitystore_user.brandon.user_id
@@ -405,7 +405,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.staging
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     brandon_as_monitor_prod = {
       permission_set_key = "brandon_monitor"
       principal_id       = data.aws_identitystore_user.brandon.user_id
@@ -413,7 +413,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.prod
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     # EMERGENCY ADMIN: Break-glass access across all accounts
     brandon_as_emergency_admin_management = {
       permission_set_key = "brandon_emergency_admin"
@@ -422,7 +422,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.management
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     brandon_as_emergency_admin_dev = {
       permission_set_key = "brandon_emergency_admin"
       principal_id       = data.aws_identitystore_user.brandon.user_id
@@ -430,7 +430,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.dev
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     brandon_as_emergency_admin_staging = {
       permission_set_key = "brandon_emergency_admin"
       principal_id       = data.aws_identitystore_user.brandon.user_id
@@ -438,7 +438,7 @@ module "sso_permission_sets" {
       target_id          = var.account_ids.staging
       target_type        = "AWS_ACCOUNT"
     }
-    
+
     brandon_as_emergency_admin_prod = {
       permission_set_key = "brandon_emergency_admin"
       principal_id       = data.aws_identitystore_user.brandon.user_id
@@ -452,7 +452,7 @@ module "sso_permission_sets" {
 # Create monthly cost budgets with email notifications for all accounts
 module "budget_monitoring" {
   source = "../../modules/budget_monitoring"
-  
+
   # Define budget limits and alert thresholds for each account
   budgets = {
     management_budget = {
@@ -476,19 +476,19 @@ module "budget_monitoring" {
       thresholds = var.budget_thresholds
     }
   }
-  
+
   notification_email = var.notification_email
-  common_tags       = module.common_tags.common_tags
+  common_tags        = module.common_tags.common_tags
 }
 
 # Configure GitHub OIDC for automated deployments
 module "github_oidc" {
   source = "../../modules/github_oidc"
-  
+
   github_repository = var.github_repository
   github_branches   = ["main", "feature/*"]
-  role_name        = "GitHubActionsDeploymentRole"
-  
+  role_name         = "GitHubActionsDeploymentRole"
+
   # Permissions for Terraform deployments
   role_policies = [
     "arn:aws:iam::aws:policy/AWSOrganizationsFullAccess",
@@ -496,7 +496,7 @@ module "github_oidc" {
     "arn:aws:iam::aws:policy/job-function/Billing",
     "arn:aws:iam::aws:policy/AWSBudgetsActionsWithAWSResourceControlAccess"
   ]
-  
+
   # Custom inline policy for additional Terraform permissions
   inline_policy = jsonencode({
     Version = "2012-10-17"
@@ -506,7 +506,7 @@ module "github_oidc" {
         Action = [
           # IAM actions needed for Terraform (instead of "iam:*")
           "iam:GetRole",
-          "iam:GetRolePolicy", 
+          "iam:GetRolePolicy",
           "iam:ListRolePolicies",
           "iam:ListAttachedRolePolicies",
           "iam:PassRole",
@@ -542,7 +542,7 @@ module "github_oidc" {
       }
     ]
   })
-  
+
   common_tags = module.common_tags.common_tags
 }
 # Test comment for GitHub Actions - deploy test 2
