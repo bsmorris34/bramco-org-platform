@@ -504,7 +504,29 @@ module "github_oidc" {
       {
         Effect = "Allow"
         Action = [
-          "iam:*",
+          # IAM actions needed for Terraform (instead of "iam:*")
+          "iam:GetRole",
+          "iam:GetRolePolicy", 
+          "iam:ListRolePolicies",
+          "iam:ListAttachedRolePolicies",
+          "iam:PassRole",
+          "iam:CreateRole",
+          "iam:UpdateRole",
+          "iam:DeleteRole",
+          "iam:AttachRolePolicy",
+          "iam:DetachRolePolicy",
+          "iam:CreatePolicy",
+          "iam:DeletePolicy",
+          "iam:GetPolicy",
+          "iam:GetPolicyVersion",
+          "iam:ListPolicyVersions",
+          "iam:CreateOpenIDConnectProvider",
+          "iam:GetOpenIDConnectProvider",
+          "iam:UpdateOpenIDConnectProviderThumbprint",
+          "iam:DeleteOpenIDConnectProvider",
+          "iam:TagRole",
+          "iam:UntagRole",
+          # Keep other services as-is
           "s3:*",
           "dynamodb:*",
           "cloudformation:*",
