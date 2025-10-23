@@ -526,6 +526,8 @@ module "github_oidc" {
           "iam:DeleteOpenIDConnectProvider",
           "iam:TagRole",
           "iam:UntagRole",
+          "iam:TagOpenIDConnectProvider",
+          "iam:UntagOpenIDConnectProvider",
           # Keep other services as-is
           "s3:*",
           "dynamodb:*",
