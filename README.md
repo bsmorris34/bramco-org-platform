@@ -5,10 +5,10 @@ AWS multi-account organization infrastructure managed with Terraform and automat
 ## 🏗️ Architecture
 
 ### Account Structure
-- **Management Account** (396913723725): Organization root, SSO, billing
-- **Dev Account** (688567306703): Development workloads
-- **Staging Account** (400205986141): Pre-production testing
-- **Production Account** (825765407025): Production workloads
+- **Management Account**: Organization root, SSO, billing
+- **Dev Account**: Development workloads
+- **Staging Account**: Pre-production testing
+- **Production Account**: Production workloads
 
 ### Organizational Units
 ```
@@ -65,7 +65,7 @@ Monthly budgets with email alerts at 50%, 80%, 100%:
 ### OIDC Configuration
 - **Provider**: GitHub Actions OIDC
 - **Role**: `GitHubActionsDeploymentRole`
-- **Repository**: `bsmorris34/bramco-org-platform`
+- **Repository**: [Your GitHub Repository]
 - **Permissions**: Full organization and infrastructure management
 
 ## 🛠️ Development Workflow
@@ -78,7 +78,7 @@ Monthly budgets with email alerts at 50%, 80%, 100%:
 
 2. **Make Infrastructure Changes**
    - Edit Terraform files in `cloud_org_forge/aws/`
-   - Update variables in `terraform.tfvars` (local only)
+   - Copy `terraform.tfvars.example` to `terraform.tfvars` and update with your values
 
 3. **Create Pull Request**
    - Push branch to GitHub
@@ -111,7 +111,8 @@ cloud_org_forge/
     │   └── organization/
     │       ├── main.tf              # Main configuration
     │       ├── variables.tf         # Variable definitions
-    │       ├── terraform.tfvars     # Variable values (gitignored)
+    │       ├── terraform.tfvars.example # Example variable values
+    │       ├── terraform.tfvars     # Your variable values (gitignored)
     │       ├── backend.tf           # S3 backend config
     │       └── backend.hcl          # Backend parameters
     └── modules/
@@ -125,11 +126,11 @@ cloud_org_forge/
 ## 🔧 Configuration
 
 ### Required GitHub Secrets
-- `AWS_ROLE_ARN`: `arn:aws:iam::396913723725:role/GitHubActionsDeploymentRole`
+- `AWS_ROLE_ARN`: `arn:aws:iam::<MANAGEMENT_ACCOUNT_ID>:role/GitHubActionsDeploymentRole`
 - `AWS_REGION`: `us-east-1`
 
 ### Backend Configuration
-- **S3 Bucket**: `bramco1-terraform-state-3725`
+- **S3 Bucket**: `<your-terraform-state-bucket>`
 - **DynamoDB Table**: `cloud-org-forge-state-lock`
 - **Region**: `us-east-1`
 
