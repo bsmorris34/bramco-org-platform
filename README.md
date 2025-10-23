@@ -130,7 +130,7 @@ cloud_org_forge/
 - `AWS_REGION`: `us-east-1`
 
 ### Backend Configuration
-- **S3 Bucket**: `<your-terraform-state-bucket>`
+- **S3 Bucket**: `bramco1-terraform-state-3725`
 - **DynamoDB Table**: `cloud-org-forge-state-lock`
 - **Region**: `us-east-1`
 
