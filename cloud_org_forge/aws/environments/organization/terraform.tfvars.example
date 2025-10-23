@@ -1,0 +1,30 @@
+# AWS Region (restricted by SCP to us-east-1 only)
+aws_region = "us-east-1"
+
+# AWS Account IDs for your Organization
+# Replace with your actual AWS account IDs
+account_ids = {
+  management = "111111111111" # Your management account ID
+  dev        = "222222222222" # Your dev account ID
+  staging    = "333333333333" # Your staging account ID
+  prod       = "444444444444" # Your prod account ID
+}
+
+# Email for notifications
+# Replace with your notification email
+notification_email = "your-email@example.com"
+
+# Monthly budget amounts (optional - defaults defined in variables.tf)
+budget_amounts = {
+  management = 50
+  dev        = 25
+  staging    = 30
+  prod       = 100
+}
+
+# Budget alert thresholds (optional - defaults defined in variables.tf)
+budget_thresholds = [50, 80, 100]
+
+# GitHub repository for automated deployments
+# Replace with your GitHub repository in format "username/repo-name"
+github_repository = "your-username/your-repo-name"

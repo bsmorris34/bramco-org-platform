@@ -51,7 +51,7 @@ Both workflows use OpenID Connect (OIDC) to authenticate with AWS without storin
 **Configuration**:
 - **Provider**: GitHub Actions OIDC provider in AWS
 - **Role**: `GitHubActionsDeploymentRole`
-- **Trust Policy**: Allows `repo:bsmorris34/bramco-org-platform:*`
+- **Trust Policy**: Allows `repo:your-username/your-repo-name:*`
 
 ### Runtime Configuration
 The `terraform.tfvars` file is created at runtime to avoid storing sensitive account IDs in the repository. The file contains:
@@ -59,12 +59,12 @@ The `terraform.tfvars` file is created at runtime to avoid storing sensitive acc
 ```hcl
 aws_region = "us-east-1"
 account_ids = {
-  management = "396913723725"
-  dev        = "688567306703"
-  staging    = "400205986141"
-  prod       = "825765407025"
+  management = "111111111111"
+  dev        = "222222222222"
+  staging    = "333333333333"
+  prod       = "444444444444"
 }
-notification_email = "bsmorris1+aws@gmail.com"
+notification_email = "your-email@example.com"
 budget_amounts = {
   management = 50
   dev        = 25
@@ -72,7 +72,7 @@ budget_amounts = {
   prod       = 100
 }
 budget_thresholds = [50, 80, 100]
-github_repository = "bsmorris34/bramco-org-platform"
+github_repository = "your-username/your-repo-name"
 ```
 
 ## Troubleshooting
