@@ -15,9 +15,10 @@ resource "aws_iam_openid_connect_provider" "github" {
     data.tls_certificate.github.certificates[0].sha1_fingerprint
   ]
 
-  tags = merge(var.common_tags, {
-    Name = "GitHub Actions OIDC Provider"
-  })
+  # Temporarily remove tags to avoid permission issue
+  # tags = merge(var.common_tags, {
+  #   Name = "GitHub Actions OIDC Provider"
+  # })
 }
 
 # Create trust policy for GitHub Actions
