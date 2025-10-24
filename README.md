@@ -78,7 +78,8 @@ Monthly budgets with email alerts at 50%, 80%, 100%:
 
 2. **Make Infrastructure Changes**
    - Edit Terraform files in `cloud_org_forge/aws/`
-   - Copy `terraform.tfvars.example` to `terraform.tfvars` and update with your values
+   - **For local testing only**: Copy `terraform.tfvars.example` to `terraform.tfvars` and update with your values
+   - **Note**: GitHub Actions uses secrets, not local tfvars files
 
 3. **Create Pull Request**
    - Push branch to GitHub
@@ -89,18 +90,32 @@ Monthly budgets with email alerts at 50%, 80%, 100%:
    - Merge PR to main
    - Automatic deployment via GitHub Actions
 
-### Local Development
+### Local Development (Optional)
+**Note**: Production deployments use GitHub Actions. Local development is optional for testing.
+
 ```bash
-# Initialize Terraform
+# 1. Copy example configuration
+cp terraform.tfvars.example terraform.tfvars
+
+# 2. Edit terraform.tfvars with your actual values
+vim terraform.tfvars
+
+# 3. Initialize Terraform
 cd cloud_org_forge/aws/environments/organization
 terraform init -backend-config=backend.hcl
 
-# Plan changes
+# 4. Plan changes
 terraform plan
 
-# Apply changes (use GitHub Actions for production)
+# 5. Apply changes (use GitHub Actions for production)
 terraform apply
 ```
+
+### Production Deployment
+**All production changes go through GitHub Actions:**
+1. Create PR → Triggers `terraform-plan.yml`
+2. Merge PR → Triggers `terraform-deploy.yml`
+3. No local `terraform.tfvars` needed - uses GitHub secrets
 
 ## 📁 Project Structure
 
@@ -126,8 +141,15 @@ cloud_org_forge/
 ## 🔧 Configuration
 
 ### Required GitHub Secrets
+For automated deployments, configure these repository secrets:
 - `AWS_ROLE_ARN`: `arn:aws:iam::<MANAGEMENT_ACCOUNT_ID>:role/GitHubActionsDeploymentRole`
 - `AWS_REGION`: `us-east-1`
+- `MANAGEMENT_ACCOUNT_ID`: Your management account ID
+- `DEV_ACCOUNT_ID`: Your dev account ID
+- `STAGING_ACCOUNT_ID`: Your staging account ID
+- `PROD_ACCOUNT_ID`: Your prod account ID
+- `NOTIFICATION_EMAIL`: Email for budget alerts
+- `REPOSITORY_NAME`: Repository in format `username/repo-name`
 
 ### Backend Configuration
 - **S3 Bucket**: `bramco1-terraform-state-3725`
